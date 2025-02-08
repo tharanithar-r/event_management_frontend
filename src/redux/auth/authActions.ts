@@ -1,0 +1,71 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+//import { Dispatch, Action } from "@reduxjs/toolkit";
+import axios from "axios";
+import { setAuth, setAuthError, setAuthLoading } from "./authSlice";
+
+const backendURL = import.meta.env.VITE_BACKEND_URL;
+
+export const signIn =
+  (username: string, password: string, role: "user") =>
+  async (dispatch: any) => {
+    dispatch(setAuthLoading());
+    try {
+      const res = await axios.post(
+        `${backendURL}/api/v1/${role}/signin`,
+        { username, password },
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        dispatch(setAuth({ id: username, role }));
+        return true;
+      } else {
+        dispatch(setAuthError("Invalid credentials"));
+        return false;
+      }
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message || `Error during ${role} sign-in`;
+      dispatch(setAuthError(errorMessage));
+      return false;
+    }
+  };
+
+export const signUp =
+  (username: string, email: string, password: string, role: "user") =>
+  async (dispatch: any) => {
+    dispatch(setAuthLoading());
+    try {
+      const res = await axios.post(
+        `${backendURL}/api/v1/${role}/signup`,
+        { username, email, password },
+        { withCredentials: true }
+      );
+
+      if (res.status === 200) {
+        dispatch(setAuth({ id: username, role }));
+        return true;
+      } else {
+        dispatch(setAuthError("Register failed"));
+        return false;
+      }
+    } catch (err: any) {
+      const errorMessage =
+        err.response?.data?.message || `Error during ${role} sign-in`;
+      dispatch(setAuthError(errorMessage));
+      return false;
+    }
+  };
+
+export const signOut = () => async (dispatch: any) => {
+  dispatch(setAuthLoading());
+  try {
+    await axios.get(`${backendURL}/api/v1/signout`, {
+      withCredentials: true,
+    });
+  } catch (err: any) {
+    const errorMessage = err.response?.data?.message || `Error during sign-out`;
+    dispatch(setAuthError(errorMessage));
+    return false;
+  }
+};

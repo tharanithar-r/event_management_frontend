@@ -163,16 +163,16 @@ const Home = () => {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           size="full"
-          className="dark"
+          className="dark overflow-scroll"
         >
           <ModalContent>
-            {() => (
+            {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1 text-center text-white">
                   Create Event
                 </ModalHeader>
                 <ModalBody>
-                  <EventCreation />
+                  <EventCreation onClose={onClose} />
                 </ModalBody>
                 <ModalFooter></ModalFooter>
               </>

@@ -12,6 +12,7 @@ import {
 import { DateTime } from "luxon";
 import EventDetails from "./EventDetails";
 import { useState } from "react";
+import { LocationIcon } from "../icons/LocationIcon";
 
 interface EventCardProps {
   event: {
@@ -45,32 +46,49 @@ const EventCard = ({ event }: EventCardProps) => {
   return (
     <>
       <Card className="" isPressable onPress={() => setIsModalOpen(true)}>
-        <div className="relative flex justify-center items-center p-4">
+        <div className="relative aspect-[16/9] w-full overflow-hidden">
           <Image
             alt={event.title}
-            className="w-full h-[200px] object-cover rounded-2xl"
+            className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
             src={event.imageUrl || "/default-event-image.jpg"}
+            radius="none"
+            shadow="none"
           />
         </div>
 
         <CardBody className="p-4">
-          <div className="flex justify-between items-start">
+          <div className="flex justify-between items-start items-center">
             <div>
               <h4 className="font-bold text-lg">{event.title}</h4>
-              <p className="text-sm text-gray-400">{event.location}</p>
+              <div className="flex items-center gap-2 text-sm text-gray-400 mt-2">
+                <LocationIcon />
+                <p className="text-sm text-gray-400">{event.location}</p>
+              </div>
             </div>
-            <Card className="px-3 py-1 rounded-lg text-xs ml-4">
+            <Card
+              className="px-3 py-1 rounded-lg text-xs ml-4 break-normal"
+              classNames={{
+                base: "border-solid border-2 border-warning",
+              }}
+            >
               <span className="block font-bold text-sm text-center">
                 {startDate.month}
               </span>
-              <span className="block text-lg text-center">{startDate.day}</span>
+              <span className="block text-lg text-center  ">
+                {startDate.day}
+              </span>
             </Card>
           </div>
         </CardBody>
 
         <CardFooter className="flex justify-between items-center p-4">
           {!isPastEvent && (
-            <Button color="warning" className="font-bold" radius="full">
+            <Button
+              color="warning"
+              className="font-bold"
+              radius="full"
+              fullWidth
+            >
               Join now
             </Button>
           )}
@@ -82,7 +100,7 @@ const EventCard = ({ event }: EventCardProps) => {
         onClose={() => setIsModalOpen(false)}
         placement="center"
         size="full"
-        className="bg-black text-white"
+        className="bg-black text-white overflow-scroll"
       >
         <ModalContent>
           {(onClose) => (

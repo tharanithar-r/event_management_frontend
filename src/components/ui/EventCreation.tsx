@@ -14,10 +14,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCategory } from "../../redux/event/eventSlice";
 import { AppDispatch } from "../../redux/store";
 import uploadToCloudinary from "../../hooks/uploadToCloudinary";
-import { createEvent } from "../../redux/event/eventAction";
+import { createEvent, fetchEvents } from "../../redux/event/eventAction";
 import { selectCurrentAuth } from "../../redux/auth/authSlice";
+import { useLoadingAction } from "../../hooks/useLoading";
 
-const EventCreation = () => {
+interface EventCreationProps {
+  onClose: () => void;
+}
+
+const EventCreation = ({ onClose }: EventCreationProps) => {
   const dispatch = useDispatch<AppDispatch>();
   const currentAuth = useSelector(selectCurrentAuth);
   const [error, setError] = useState({});
@@ -29,6 +34,7 @@ const EventCreation = () => {
   //const [imageUrl, setImageUrl] = useState<string>("");
 
   const categories = useSelector(getCategory);
+  const { withLoading } = useLoadingAction();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -97,28 +103,30 @@ const EventCreation = () => {
     }
 
     try {
-      console.log("Selected Image:");
-      let uploadImageUrl = "";
+      await withLoading(async () => {
+        let uploadImageUrl = "";
 
-      if (selectedImage) {
-        uploadImageUrl = await uploadToCloudinary(selectedImage);
-        console.log("Uploaded Image URL:", uploadImageUrl);
-      }
+        if (selectedImage) {
+          uploadImageUrl = await uploadToCloudinary(selectedImage);
+        }
 
-      const eventData = {
-        title: data.eventname as string,
-        description: data.eventdesc as string,
-        date: startDateTime.toISOString(),
-        endDate: endDateTime.toISOString(),
-        category: data.eventcategory as string,
-        location: data.eventloc as string,
-        maxAttendees: parseInt(data.eventmaxattend as string) || 100,
-        isPublic: true,
-        imageUrl: uploadImageUrl,
-        creatorId: currentAuth.id,
-      };
-      console.log("Event Data:", eventData);
-      await dispatch(createEvent(eventData));
+        const eventData = {
+          title: data.eventname as string,
+          description: data.eventdesc as string,
+          date: startDateTime.toISOString(),
+          endDate: endDateTime.toISOString(),
+          category: data.eventcategory as string,
+          location: data.eventloc as string,
+          maxAttendees: parseInt(data.eventmaxattend as string) || 100,
+          isPublic: true,
+          imageUrl: uploadImageUrl,
+          creatorId: currentAuth.id,
+        };
+        console.log("Event Data:", eventData);
+        await dispatch(createEvent(eventData));
+        onClose();
+        await dispatch(fetchEvents("All"));
+      }, "event");
     } catch (err) {
       console.error("Failed to create event:", err);
     }

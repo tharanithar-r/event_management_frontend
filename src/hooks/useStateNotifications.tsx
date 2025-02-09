@@ -22,6 +22,11 @@ const stateConfig: StateConfig = {
     successMessage: "Authentication successful",
     errorPrefix: "Auth error:",
   },
+  event: {
+    loadingMessage: "Processing event...",
+    successMessage: "Event operation successful",
+    errorPrefix: "Event error:",
+  },
 };
 
 export const useStateNotifications = () => {
@@ -31,6 +36,7 @@ export const useStateNotifications = () => {
 
   const states = useSelector((state: RootState) => ({
     auth: state.auth,
+    event: state.event,
   }));
 
   useEffect(() => {

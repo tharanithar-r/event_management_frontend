@@ -29,7 +29,7 @@ const EventDetails = ({ event, onClose }: EventDetailsProps) => {
   const isPastEvent = new Date(event.endDate) < new Date();
   return (
     <>
-      <div className="relative">
+      <div className="relative flex items-center justify-center">
         <Image
           src={event.imageUrl || "/default-event-image.jpg"}
           alt={event.title}

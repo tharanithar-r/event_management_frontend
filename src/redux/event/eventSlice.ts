@@ -64,13 +64,29 @@ const eventSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Categories
+      .addCase(fetchCategories.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.categories = action.payload ?? [];
         state.status = "succeeded";
       })
+      .addCase(fetchCategories.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Failed to fetch categories";
+      })
+      // Events
+      .addCase(fetchEvents.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(fetchEvents.fulfilled, (state, action) => {
         state.events = action.payload;
         state.status = "succeeded";
+      })
+      .addCase(fetchEvents.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || "Failed to fetch events";
       });
   },
 });

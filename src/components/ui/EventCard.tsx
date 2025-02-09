@@ -57,7 +57,7 @@ const EventCard = ({ event }: EventCardProps) => {
         </div>
 
         <CardBody className="p-4">
-          <div className="flex justify-between items-start items-center">
+          <div className="flex justify-between items-start">
             <div>
               <h4 className="font-bold text-lg">{event.title}</h4>
               <div className="flex items-center gap-2 text-sm text-gray-400 mt-2">

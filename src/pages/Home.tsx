@@ -139,7 +139,7 @@ const Home = () => {
           className="fixed bottom-6 right-6 shadow-lg z-50 px-6"
           onPress={onOpen}
           radius="full"
-          variant="flat"
+          variant="shadow"
           startContent={
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -171,7 +171,7 @@ const Home = () => {
                 <ModalHeader className="flex flex-col gap-1 text-center text-white">
                   Create Event
                 </ModalHeader>
-                <ModalBody>
+                <ModalBody className="overflow-scroll">
                   <EventCreation onClose={onClose} />
                 </ModalBody>
                 <ModalFooter></ModalFooter>

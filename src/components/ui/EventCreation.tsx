@@ -132,7 +132,7 @@ const EventCreation = ({ onClose }: EventCreationProps) => {
     }
   };
   return (
-    <div>
+    <div className="overflow-scroll">
       <Form onSubmit={handleCreateEvent} validationErrors={error}>
         <div className="w-full space-y-6">
           <Input name="eventname" label="Event Title" fullWidth />

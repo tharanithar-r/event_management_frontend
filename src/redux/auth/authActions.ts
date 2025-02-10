@@ -5,16 +5,23 @@ import { setAuth, setAuthError, setAuthLoading } from "./authSlice";
 
 const backendURL = import.meta.env.VITE_BACKEND_URL;
 
+const api = axios.create({
+  baseURL: backendURL,
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export const signIn =
   (username: string, password: string, role: "user") =>
   async (dispatch: any) => {
     dispatch(setAuthLoading());
     try {
-      const res = await axios.post(
-        `${backendURL}/api/v1/${role}/signin`,
-        { username, password },
-        { withCredentials: true }
-      );
+      const res = await api.post(`${backendURL}/api/v1/${role}/signin`, {
+        username,
+        password,
+      });
 
       if (res.status === 200) {
         dispatch(setAuth({ id: username, role }));
@@ -36,11 +43,11 @@ export const signUp =
   async (dispatch: any) => {
     dispatch(setAuthLoading());
     try {
-      const res = await axios.post(
-        `${backendURL}/api/v1/${role}/signup`,
-        { username, email, password },
-        { withCredentials: true }
-      );
+      const res = await api.post(`${backendURL}/api/v1/${role}/signup`, {
+        username,
+        email,
+        password,
+      });
 
       if (res.status === 200) {
         dispatch(setAuth({ id: username, role }));
